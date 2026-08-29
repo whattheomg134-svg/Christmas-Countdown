@@ -1,0 +1,159 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Christmas Countdown 🎄</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to bottom, #0b3d2e, #145a32);
+    font-family: 'Comic Sans MS', Arial, sans-serif;
+    color: white;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+  }
+
+  .box {
+    background: #c0392b;
+    padding: 30px 50px;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    margin-top: 20px;
+  }
+
+  .number {
+    font-size: 5em;
+    font-weight: bold;
+  }
+
+  .label {
+    font-size: 1.3em;
+    margin-top: 5px;
+    text-transform: uppercase;
+  }
+
+  .buttons {
+    margin-top: 25px;
+    display: flex;
+    gap: 20px;
+  }
+
+  button {
+    font-size: 2em;
+    width: 60px;
+    height: 60px;
+    border: none;
+    border-radius: 50%;
+    background: #f1c40f;
+    color: #0b3d2e;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #f4d03f;
+  }
+
+  .done {
+    font-size: 2em;
+    margin-top: 20px;
+  }
+
+  .reset {
+    margin-top: 20px;
+    background: none;
+    border: 2px solid white;
+    color: white;
+    border-radius: 10px;
+    width: auto;
+    height: auto;
+    padding: 8px 16px;
+    font-size: 1em;
+  }
+</style>
+</head>
+<body>
+
+  <h1>🎅 Countdown to Christmas 🎄</h1>
+  <div class="box" id="dayBox">
+    <div class="number" id="days">00</div>
+    <div class="label">Days Left</div>
+  </div>
+
+  <div class="buttons">
+    <button id="minusBtn">−</button>
+    <button id="plusBtn">+</button>
+  </div>
+
+  <button class="reset" id="resetBtn">Reset to real countdown</button>
+
+  <div class="done" id="doneMessage" style="display:none;">🎉 It's Christmas! 🎉</div>
+
+<script>
+  // This figures out how many days are left until December 25th
+  function getRealDaysLeft() {
+    const now = new Date();
+    let year = now.getFullYear();
+    let christmas = new Date(year, 11, 25); // month 11 = December
+    christmas.setHours(0,0,0,0);
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    if (today > christmas) {
+      christmas = new Date(year + 1, 11, 25);
+    }
+
+    const diff = christmas - today;
+    return Math.ceil(diff / (1000 * 60 * 60 * 24));
+  }
+
+  // We keep the current number of days in this variable
+  let daysLeft = getRealDaysLeft();
+
+  const daysDisplay = document.getElementById("days");
+  const doneMessage = document.getElementById("doneMessage");
+  const dayBox = document.getElementById("dayBox");
+
+  function render() {
+    if (daysLeft <= 0) {
+      dayBox.style.display = "none";
+      doneMessage.style.display = "block";
+    } else {
+      dayBox.style.display = "block";
+      doneMessage.style.display = "none";
+      daysDisplay.textContent = String(daysLeft).padStart(2, "0");
+    }
+  }
+
+  // Plus button: adds one day
+  document.getElementById("plusBtn").addEventListener("click", () => {
+    daysLeft++;
+    render();
+  });
+
+  // Minus button: takes away one day (but not below 0)
+  document.getElementById("minusBtn").addEventListener("click", () => {
+    if (daysLeft > 0) daysLeft--;
+    render();
+  });
+
+  // Reset button: goes back to the real countdown to Christmas
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    daysLeft = getRealDaysLeft();
+    render();
+  });
+
+  render();
+</script>
+
+</body>
+</html>
